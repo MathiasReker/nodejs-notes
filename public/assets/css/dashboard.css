@@ -1,0 +1,98 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 48px 0 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+.btn:hover, .sidebar {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .sidebar {
+        top: 5rem;
+    }
+}
+
+.sidebar-sticky {
+    height: calc(100vh - 48px);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.sidebar .nav-link {
+    font-weight: normal;
+    color: #fff;
+}
+
+.sidebar .nav-link .feather {
+    margin-right: 4px;
+    color: #727272;
+}
+
+.sidebar .nav-link.active {
+    color: #fff;
+    font-weight: bolder;
+}
+
+.sidebar-heading:hover {
+    color: #fff;
+}
+
+.sidebar-heading {
+    font-size: .75rem;
+    color: #fff;
+}
+
+.navbar-brand {
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    background-color: rgba(0, 0, 0, .25);
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+}
+
+.navbar .navbar-toggler {
+    top: .25rem;
+    right: 1rem;
+}
+
+.navbar .form-control {
+    padding: .75rem 1rem;
+}
+
+.form-control-dark {
+    color: #fff;
+    background-color: rgba(255, 255, 255, .1);
+    border-color: rgba(255, 255, 255, .1);
+}
+
+.edit-btn, .edit-btn:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+.delete-btn, .delete-btn:hover {
+    color: #e73c7e;
+}
+
+.btn-primary {
+    background-color: #23a6d5;
+}

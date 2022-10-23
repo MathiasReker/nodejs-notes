@@ -1,0 +1,61 @@
+<div class="modal fade" id="editUrlModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formEditUrl">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="editSlug" class="col-form-label">Url:</label>
+                        <input type="text" class="form-control" id="editSlug" pattern="[a-zA-Z0-9-]+"
+                               value="{{#nav}}{{#active}}{{ slug }}{{/active}}{{/nav}}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPageTitle" class="col-form-label">Menu title:</label>
+                        <input type="text" class="form-control" id="editPageTitle"
+                               value="{{#nav}}{{#active}}{{ title }}{{/active}}{{/nav}}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPostTitle" class="col-form-label">Page title:</label>
+                        <input type="text" class="form-control" id="editPostTitle" value="{{ title }}" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script defer>
+    const editPage = event => {
+        event.preventDefault();
+        const newUrl = document.getElementById("editSlug").value;
+
+        fetch('/api/pages/' + document.getElementById("pageId").value, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                'slug': newUrl,
+                'pageTitle': document.getElementById("editPageTitle").value,
+                'postTitle': document.getElementById("editPostTitle").value,
+            })
+        }).then(() => {
+            location.replace(`/${newUrl}`);
+        });
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("editSlug").value = location.pathname.substring(1);
+        document.getElementById('formEditUrl').addEventListener('submit', editPage, false);
+    });
+</script>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+{{> ../partials/head }}
+<body>
+{{> ../partials/header }}
+
+<div class="container-fluid">
+    <div class="row">
+        {{> ../partials/nav }}
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            {{#data}}
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">{{ title }}</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="me-2">
+                            <a href="#" class="edit-btn" data-bs-toggle="modal"
+                               data-bs-target="#editUrlModal"><i class="bi bi-pencil mx-2"></i>
+                            </a>
+                            <a href="" id="delete-page" class="delete-btn"><i class="bi bi-trash mx-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <article class="markdown-body mb-5">
+                    {{{ html }}}
+                </article>
+
+                <hr class="py-2">
+                <form id="form">
+                    <div class="row align-items-start">
+                        <h3>Edit content of the page (markdown)</h3>
+                        <div class="form-floating mb-3 col-12 col-md-10">
+                            <label for="md" class="form-label"></label>
+                            <pre><textarea class="form-control" id="md" rows="10"
+                                           style="height: 300px"
+                                           required>{{ md }}</textarea></pre>
+                        </div>
+                        <div class="form-floating col-12 col-md-2">
+                            <button class="w-100 btn btn-lg btn-outline-dark mb-5" type="submit">Save</button>
+                        </div>
+                    </div>
+                </form>
+                <input type="hidden" id="pageId" name="pageId" value="{{ id }}">
+
+                {{> ../partials/modals/edit-page-modal }}
+            {{/data}}
+        </main>
+    </div>
+</div>
+
+<script defer>
+    const updateSubmit = event => {
+        event.preventDefault();
+
+        fetch('/api/posts', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: document.getElementById("pageId").value,
+                md: document.getElementById('md').value
+            })
+        }).then(() => {
+            location.reload();
+        });
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById('form');
+        form.addEventListener('submit', updateSubmit, false);
+    });
+</script>
+
+<script defer>
+    function deletePage(event) {
+        event.preventDefault();
+        fetch('/api/pages/' + document.getElementById("pageId").value, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        }).then(() => {
+            location.replace("/");
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const btnDeletePage = document.getElementById('delete-page');
+        btnDeletePage.addEventListener('click', deletePage, false);
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+{{> ../partials/head }}
+
+<body class="text-center">
+
+<main class="form-signin w-100 m-auto">
+    <form id="form">
+        <h1 class="h3 mb-3 fw-normal light-color">Sign in with your KEA-mail</h1>
+
+        <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="email" value="demo@kea.dk" pattern=".*@kea.dk">
+            <label for="email">Email address</label>
+        </div>
+
+        <button class="w-100 btn btn-lg btn-outline-light" type="submit">Sign in</button>
+        <p class="mt-5 mb-3 light-color">{{ copyright }}</p>
+    </form>
+</main>
+
+<script defer>
+    const signinSubmit = event => {
+        event.preventDefault();
+
+        fetch('/api/auth/signin', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: document.getElementById('email').value,
+            })
+        }).then(response => response.json()).then((response) => {
+            document.cookie = `auth=${response.auth}; expires=Thu, 18 Dec 2030 12:00:00 UTC; path=/`;
+
+            location.reload();
+        });
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById('form');
+        form.addEventListener('submit', signinSubmit, false);
+    });
+</script>
+
+</body>
+</html>

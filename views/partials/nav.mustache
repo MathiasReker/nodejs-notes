@@ -1,0 +1,93 @@
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+    <div class="position-sticky pt-3 sidebar-sticky">
+        <span class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-uppercase">
+            <span>Notes</span>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#newPage" class="sidebar-heading"
+               aria-label="Add a new note">
+                <i class="bi bi-plus-circle mx-2"></i>
+            </a>
+        </span>
+        <ul class="nav flex-column mb-2">
+            {{#nav}}
+                <li class="nav-item">
+                    <a class="nav-link{{#active}} active{{/active}}" aria-current="page" href="{{slug}}">
+                        <i class="bi bi-file-earmark-text mx-2"></i>
+                        {{title}}
+                    </a>
+                </li>
+            {{/nav}}
+        </ul>
+        <span class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-uppercase">
+            <span>Other</span>
+        </span>
+        <ul class="nav flex-column mb-2">
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="https://github.com/MathiasReker/nodejs-notes"
+                   target="_blank">
+                    <i class="bi bi-github mx-2"></i>
+                    GitHub
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="modal fade" id="newPage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formAddNewPage">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">New page</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="addTitle" class="col-form-label">Title:</label>
+                        <input type="text" class="form-control" id="addTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addSlug" class="col-form-label">URL path:</label>
+                        <input class="form-control" id="addSlug" pattern="[a-zA-Z0-9-]+" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create page
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script defer>
+    const createPage = event => {
+        event.preventDefault();
+
+        fetch('/api/pages', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: document.getElementById("addTitle").value,
+                slug: document.getElementById('addSlug').value
+            })
+        }).then(() => {
+            location.replace(document.getElementById('addSlug').value);
+        });
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("addTitle").addEventListener("keyup", () => {
+            document.getElementById("addSlug").value = document.getElementById("addTitle").value
+                    .replace(/\s+/g, '-')
+                    .replace(/[^a-zA-Z0-9-]+/g, '')
+                    .toLowerCase();
+        })
+
+        const submitFormCreatePage = document.getElementById('formAddNewPage');
+        submitFormCreatePage.addEventListener('submit', createPage, false);
+    });
+</script>
